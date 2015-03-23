@@ -23,13 +23,24 @@
 *
 *
 *	Name: 			MbjApiHelper.js
-*	Version:		v0.9
-*	Date:			March 11, 2015
+*	Version:		v0.95
+*	Date:			March 23, 2015
+*
 *	Description: 	A helper plugin to facilitate communication between Unity-based projects and the MyBeanJar API
+*
 *	URL: 			https://github.com/cccharle/MyBeanJar-SDK-Unity
+*	
 *	Author: 		Christopher Charles (cccharle@subplex.com)
 *
-*	Changelog: 		v0.9 	--------------------------------------------------------------------------------------
+*	Changelog: 		v0.95 	--------------------------------------------------------------------------------------
+*					
+*					Explicitly cast types where needed to eliminate warnings when using pragma strict. Added 
+*					.unitypackage file for easier installation.
+*
+*
+*
+*					v0.9 	--------------------------------------------------------------------------------------
+*
 *					Initial documented release. This plugin is intended to serve as a bridge between
 *					projects built in Unity and the MyBeanJar API. Unity's lack of support for JSON objects
 *					out of the box as well as its draconian webplayer security restrictions can make
@@ -60,8 +71,8 @@ import System.Security.Cryptography;
 private var callback 	: Function;
 private var result 		: String;
 private var paramstring : String;
-private var method;
-private var params;
+private var method		: String;
+private var params		: Hashtable;
 
 
 //// MyBeanJar API-specific vars /////////////////////////////////////////////
@@ -72,7 +83,7 @@ private var params;
 	private var STATUS_SUCCESS = "Status success";						//////
 	private var STATUS_FAIL  = "Status fail";							//////
 																		//////
-	private var resource = "v2services";								//////
+	private var resource : String = "v2services";						//////
 																		//////
 	// MyBeanJar App ID													//////
 	// visit http://www.mybeanjar.com to request a new app ID			//////
@@ -260,7 +271,7 @@ function request_to_api(callback:Function, resource:String, method:String, param
 	 
 	// Set request encoding and headers
 	var encoding = new System.Text.UTF8Encoding();
-	var postHeader = new Hashtable();
+	var postHeader = new Dictionary.<String, String>();
 	   
 	postHeader.Add("Content-Type", "text/json");
 //	postHeader.Add("Content-Length", jString.Length);
@@ -316,7 +327,7 @@ function request_to_api(callback:Function, resource:String, method:String, param
 
 
 
-function authenticate_user(username,password,callback:Function) {
+function authenticate_user(username:String, password:String, callback:Function) {
     
     var params = new Hashtable();
     params.Add("username", username);
@@ -327,7 +338,7 @@ function authenticate_user(username,password,callback:Function) {
 	
 	
 	
-function delete_bean(username, password, beankey, callback) {
+function delete_bean(username:String, password:String, beankey:String, callback:Function) {
    
     var params = new Hashtable();
     params.Add("username", username);
@@ -339,7 +350,7 @@ function delete_bean(username, password, beankey, callback) {
 
 
 
-function get_apps(username, password, limit_value, callback) {
+function get_apps(username:String, password:String, limit_value:int, callback:Function) {
 
 	var params = new Hashtable();
     params.Add("username", username);
@@ -351,7 +362,7 @@ function get_apps(username, password, limit_value, callback) {
 
 
 
-function get_award(username, password, appkey, callback) {
+function get_award(username:String, password:String, appkey:String, callback:Function) {
 
     var params = new Hashtable();
     params.Add("username", username);
@@ -363,7 +374,7 @@ function get_award(username, password, appkey, callback) {
 
 
 
-function get_beans(username, password, limit_value, sort_by, callback) {
+function get_beans(username:String, password:String, limit_value:int, sort_by:String, callback:Function) {
 
     var params = new Hashtable();
     params.Add("username", username);
@@ -376,7 +387,7 @@ function get_beans(username, password, limit_value, sort_by, callback) {
 
 
 
-function get_categories(username, password, callback) {
+function get_categories(username:String, password:String, callback:Function) {
 
     var params = new Hashtable();
     params.Add("username", username);
@@ -387,7 +398,7 @@ function get_categories(username, password, callback) {
 
 
 
-function get_locations_for_sponsor(username, password, sponsorkey, callback){
+function get_locations_for_sponsor(username:String, password:String, sponsorkey:String, callback:Function){
     
     var params = new Hashtable();
     params.Add("username", username);
@@ -399,7 +410,7 @@ function get_locations_for_sponsor(username, password, sponsorkey, callback){
 
 
 
-function get_sponsors(username, password, limit_value, callback) {
+function get_sponsors(username:String, password:String, limit_value:int, callback:Function) {
 
 	var params = new Hashtable();
     params.Add("username", username);
@@ -411,7 +422,7 @@ function get_sponsors(username, password, limit_value, callback) {
 
 
 
-function get_winners(limit_value, callback) {
+function get_winners(limit_value:int, callback:Function) {
     
     var params = new Hashtable();
     params.Add("limit", limit_value);
@@ -421,7 +432,7 @@ function get_winners(limit_value, callback) {
 
 
 
-function reedem_bean(username, password, beankey, callback) {
+function reedem_bean(username:String, password:String, beankey:String, callback:Function) {
     
     var params = new Hashtable();
     params.Add("username", username);
@@ -433,7 +444,7 @@ function reedem_bean(username, password, beankey, callback) {
 
 
 
-function register_user(username, password, email, zipcode, categories, callback) {
+function register_user(username:String, password:String, email:String, zipcode:String, categories:String, callback:Function) {
 
     var params = new Hashtable();
     params.Add("username", username);
@@ -447,7 +458,7 @@ function register_user(username, password, email, zipcode, categories, callback)
 
 
 
-function send_password(username, callback) {
+function send_password(username, callback:Function) {
 
     var params = new Hashtable();
     params.Add("username", username);
@@ -457,7 +468,7 @@ function send_password(username, callback) {
 
 
 
-function validate_user(username,callback){
+function validate_user(username,callback:Function){
     
     var params = new Hashtable();
     params.Add("username", username);
@@ -485,7 +496,7 @@ public var winners : List.<MbjWinner>;
 var numberOfWinners : int;
 var mbjJSON : JSONNode;
 
-function parse_winners(winners, mbjJSON:JSONNode) {
+function parse_winners(winners:List.<MbjWinner>, mbjJSON:JSONNode) {
     for (var i = 0; i < numberOfWinners; i++) {
         Debug.Log("Parsing winner " + i);
         push_to_winners(winners, i, mbjJSON);
@@ -552,7 +563,7 @@ function parse_winners_and_callback(data:String, callback:Function) {
 public var apps : List.<MbjApp>;
 var numberOfApps : int;
 
-function parse_apps(apps, mbjJSON:JSONNode) {
+function parse_apps(apps:List.<MbjApp>, mbjJSON:JSONNode) {
     for (var i = 0; i < numberOfApps; i++) {
         Debug.Log("Parsing app " + i);
         push_to_apps(apps, i, mbjJSON);
@@ -623,7 +634,7 @@ function parse_apps_and_callback(data:String, callback:Function) {
 public var sponsors : List.<MbjSponsor>;
 var numberOfSponsors : int;
 
-function parse_sponsors(sponsors, mbjJSON:JSONNode) {
+function parse_sponsors(sponsors:List.<MbjSponsor>, mbjJSON:JSONNode) {
     for (var i = 0; i < numberOfSponsors; i++) {
         Debug.Log("Parsing app " + i);
         push_to_sponsors(sponsors, i, mbjJSON);
@@ -733,7 +744,7 @@ function parse_sponsor_locations_and_callback(data:String, callback:Function) {
 public var beans : List.<MbjBean>;
 var numberOfBeans : int;
 
-function parse_beans(beans, mbjJSON:JSONNode) {
+function parse_beans(beans:List.<MbjBean>, mbjJSON:JSONNode) {
     for (var i = 0; i < numberOfBeans; i++) {
         Debug.Log("Parsing app " + i);
         push_to_beans(beans, i, mbjJSON);
@@ -811,7 +822,7 @@ function parse_beans_and_callback(data:String, callback:Function) {
 public var categories : List.<MbjCategory>;
 var numberOfCategories : int;
 
-function parse_categories(categories, mbjJSON:JSONNode) {
+function parse_categories(categories:List.<MbjCategory>, mbjJSON:JSONNode) {
     for (var i = 0; i < numberOfCategories; i++) {
         Debug.Log("Parsing app " + i);
         push_to_categories(categories, i, mbjJSON);
@@ -1175,14 +1186,15 @@ static function HashMd5(prestring:String){															// BORROWED!! ¯\_(ツ)
 	var hashBytes:byte[] = md5.ComputeHash(bytes);
  
 	// Convert the encrypted bytes back to a string (base 16)
-	var hashedString = "";
+	var hashedString : String = "";
  
 	for (var i = 0; i < hashBytes.Length; i++)
 	{
-		hashedString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, "0"[0]);
+		hashedString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, "0"[0]) as String;
 	}
- 
-	return hashedString.PadLeft(32, "0"[0]);
+ 	
+ 	var hashOut : String = hashedString.PadLeft(32, "0"[0]);
+	return hashOut;
 }
 
 
@@ -1201,7 +1213,7 @@ function SxStringify(params:Hashtable) {
 		// If value is a string, encapsulate in quotation marks for JSONification...
 		if (params[key].GetType() == System.String) {
 			
-			var valueString:String = params[key];
+			var valueString:String = params[key] as String;
 			
 			// If value isn't a stringified array...
 			if (!valueString.StartsWith("[")){	
